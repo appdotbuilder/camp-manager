@@ -1,8 +1,20 @@
+import { db } from '../db';
+import { groupsTable } from '../db/schema';
+import { eq } from 'drizzle-orm';
 import { type DeleteByIdInput } from '../schema';
 
 export const deleteGroup = async (input: DeleteByIdInput): Promise<{ success: boolean }> => {
-  // This is a placeholder declaration! Real code should be implemented here.
-  // The goal of this handler is deleting a group record from the database by ID.
-  // It should also remove all associated child-group relationships.
-  return Promise.resolve({ success: true });
+  try {
+    // Delete the group - child-group relationships will be cascade deleted
+    const result = await db.delete(groupsTable)
+      .where(eq(groupsTable.id, input.id))
+      .returning()
+      .execute();
+
+    // Return success status based on whether a record was actually deleted
+    return { success: result.length > 0 };
+  } catch (error) {
+    console.error('Group deletion failed:', error);
+    throw error;
+  }
 };

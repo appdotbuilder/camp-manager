@@ -1,12 +1,21 @@
+import { db } from '../db';
+import { groupsTable } from '../db/schema';
 import { type CreateGroupInput, type Group } from '../schema';
 
 export const createGroup = async (input: CreateGroupInput): Promise<Group> => {
-  // This is a placeholder declaration! Real code should be implemented here.
-  // The goal of this handler is creating a new group record and persisting it in the database.
-  return Promise.resolve({
-    id: 0, // Placeholder ID
-    name: input.name,
-    created_at: new Date(), // Placeholder date
-    updated_at: new Date()  // Placeholder date
-  } as Group);
+  try {
+    // Insert group record
+    const result = await db.insert(groupsTable)
+      .values({
+        name: input.name
+      })
+      .returning()
+      .execute();
+
+    // Return the created group
+    return result[0];
+  } catch (error) {
+    console.error('Group creation failed:', error);
+    throw error;
+  }
 };

@@ -1,7 +1,17 @@
+import { db } from '../db';
+import { groupsTable } from '../db/schema';
 import { type Group } from '../schema';
 
 export const getGroups = async (): Promise<Group[]> => {
-  // This is a placeholder declaration! Real code should be implemented here.
-  // The goal of this handler is fetching all groups from the database.
-  return Promise.resolve([]);
+  try {
+    // Fetch all groups from the database
+    const result = await db.select()
+      .from(groupsTable)
+      .execute();
+
+    return result;
+  } catch (error) {
+    console.error('Failed to fetch groups:', error);
+    throw error;
+  }
 };

@@ -1,7 +1,20 @@
+import { db } from '../db';
+import { childrenTable } from '../db/schema';
 import { type Child, type DeleteByIdInput } from '../schema';
+import { eq } from 'drizzle-orm';
 
 export const getChildById = async (input: DeleteByIdInput): Promise<Child | null> => {
-  // This is a placeholder declaration! Real code should be implemented here.
-  // The goal of this handler is fetching a single child by ID from the database.
-  return Promise.resolve(null);
+  try {
+    // Query the child by ID
+    const result = await db.select()
+      .from(childrenTable)
+      .where(eq(childrenTable.id, input.id))
+      .execute();
+
+    // Return the child if found, null otherwise
+    return result.length > 0 ? result[0] : null;
+  } catch (error) {
+    console.error('Failed to fetch child by ID:', error);
+    throw error;
+  }
 };

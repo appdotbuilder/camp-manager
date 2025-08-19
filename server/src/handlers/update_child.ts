@@ -1,15 +1,42 @@
+import { db } from '../db';
+import { childrenTable } from '../db/schema';
 import { type UpdateChildInput, type Child } from '../schema';
+import { eq } from 'drizzle-orm';
 
 export const updateChild = async (input: UpdateChildInput): Promise<Child> => {
-  // This is a placeholder declaration! Real code should be implemented here.
-  // The goal of this handler is updating an existing child record in the database.
-  // It should update only the fields provided in the input and return the updated child.
-  return Promise.resolve({
-    id: input.id,
-    name: input.name || 'Placeholder Name',
-    birth_date: input.birth_date || new Date(),
-    gender: input.gender || 'other',
-    created_at: new Date(),
-    updated_at: new Date()
-  } as Child);
+  try {
+    // Build update object with only provided fields
+    const updateData: any = {
+      updated_at: new Date()
+    };
+
+    if (input.name !== undefined) {
+      updateData.name = input.name;
+    }
+
+    if (input.birth_date !== undefined) {
+      updateData.birth_date = input.birth_date;
+    }
+
+    if (input.gender !== undefined) {
+      updateData.gender = input.gender;
+    }
+
+    // Update the child record
+    const result = await db.update(childrenTable)
+      .set(updateData)
+      .where(eq(childrenTable.id, input.id))
+      .returning()
+      .execute();
+
+    // Check if child was found and updated
+    if (result.length === 0) {
+      throw new Error(`Child with id ${input.id} not found`);
+    }
+
+    return result[0];
+  } catch (error) {
+    console.error('Child update failed:', error);
+    throw error;
+  }
 };
