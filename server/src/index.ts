@@ -13,7 +13,14 @@ import {
   updateGroupInputSchema,
   assignChildToGroupInputSchema,
   removeChildFromGroupInputSchema,
-  deleteByIdInputSchema
+  deleteByIdInputSchema,
+  // Olympics module schemas
+  createDisciplineInputSchema,
+  updateDisciplineInputSchema,
+  assignChildToDisciplineInputSchema,
+  removeChildFromDisciplineInputSchema,
+  recordResultInputSchema,
+  getDisciplineResultsInputSchema
 } from './schema';
 
 // Import handlers - Children
@@ -35,6 +42,19 @@ import { getGroupWithChildren } from './handlers/get_group_with_children';
 // Import handlers - Child-Group associations
 import { assignChildToGroup } from './handlers/assign_child_to_group';
 import { removeChildFromGroup } from './handlers/remove_child_from_group';
+
+// Import handlers - Olympics module
+import { createDiscipline } from './handlers/create_discipline';
+import { getDisciplines } from './handlers/get_disciplines';
+import { getDisciplineById } from './handlers/get_discipline_by_id';
+import { updateDiscipline } from './handlers/update_discipline';
+import { deleteDiscipline } from './handlers/delete_discipline';
+import { getDisciplineWithChildren } from './handlers/get_discipline_with_children';
+import { assignChildToDiscipline } from './handlers/assign_child_to_discipline';
+import { removeChildFromDiscipline } from './handlers/remove_child_from_discipline';
+import { recordResult } from './handlers/record_result';
+import { getDisciplineResults } from './handlers/get_discipline_results';
+import { getChildWithDisciplines } from './handlers/get_child_with_disciplines';
 
 const t = initTRPC.create({
   transformer: superjson,
@@ -106,6 +126,52 @@ const appRouter = router({
   removeChildFromGroup: publicProcedure
     .input(removeChildFromGroupInputSchema)
     .mutation(({ input }) => removeChildFromGroup(input)),
+
+  // Olympics module - Discipline routes
+  createDiscipline: publicProcedure
+    .input(createDisciplineInputSchema)
+    .mutation(({ input }) => createDiscipline(input)),
+  
+  getDisciplines: publicProcedure
+    .query(() => getDisciplines()),
+  
+  getDisciplineById: publicProcedure
+    .input(deleteByIdInputSchema)
+    .query(({ input }) => getDisciplineById(input)),
+  
+  updateDiscipline: publicProcedure
+    .input(updateDisciplineInputSchema)
+    .mutation(({ input }) => updateDiscipline(input)),
+  
+  deleteDiscipline: publicProcedure
+    .input(deleteByIdInputSchema)
+    .mutation(({ input }) => deleteDiscipline(input)),
+  
+  getDisciplineWithChildren: publicProcedure
+    .input(deleteByIdInputSchema)
+    .query(({ input }) => getDisciplineWithChildren(input)),
+
+  // Olympics module - Child-Discipline association routes
+  assignChildToDiscipline: publicProcedure
+    .input(assignChildToDisciplineInputSchema)
+    .mutation(({ input }) => assignChildToDiscipline(input)),
+  
+  removeChildFromDiscipline: publicProcedure
+    .input(removeChildFromDisciplineInputSchema)
+    .mutation(({ input }) => removeChildFromDiscipline(input)),
+  
+  getChildWithDisciplines: publicProcedure
+    .input(deleteByIdInputSchema)
+    .query(({ input }) => getChildWithDisciplines(input)),
+
+  // Olympics module - Results routes
+  recordResult: publicProcedure
+    .input(recordResultInputSchema)
+    .mutation(({ input }) => recordResult(input)),
+  
+  getDisciplineResults: publicProcedure
+    .input(getDisciplineResultsInputSchema)
+    .query(({ input }) => getDisciplineResults(input)),
 });
 
 export type AppRouter = typeof appRouter;

@@ -2,7 +2,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChildrenManagement } from '@/components/ChildrenManagement';
 import { GroupsManagement } from '@/components/GroupsManagement';
-import { Users, UserCheck } from 'lucide-react';
+import { OlympicsManagement } from '@/components/OlympicsManagement';
+import { Users, UserCheck, Trophy } from 'lucide-react';
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
         </Card>
 
         <Tabs defaultValue="children" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-6 bg-white/80 backdrop-blur">
+          <TabsList className="grid w-full grid-cols-3 mb-6 bg-white/80 backdrop-blur">
             <TabsTrigger value="children" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
               Children
@@ -28,6 +29,10 @@ function App() {
             <TabsTrigger value="groups" className="flex items-center gap-2">
               <UserCheck className="h-4 w-4" />
               Groups
+            </TabsTrigger>
+            <TabsTrigger value="olympics" className="flex items-center gap-2">
+              <Trophy className="h-4 w-4" />
+              Olympics
             </TabsTrigger>
           </TabsList>
           
@@ -37,6 +42,10 @@ function App() {
           
           <TabsContent value="groups">
             <GroupsManagement />
+          </TabsContent>
+          
+          <TabsContent value="olympics">
+            <OlympicsManagement />
           </TabsContent>
         </Tabs>
       </div>

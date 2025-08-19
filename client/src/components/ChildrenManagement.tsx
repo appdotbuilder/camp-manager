@@ -7,18 +7,21 @@ import { Separator } from '@/components/ui/separator';
 import { trpc } from '@/utils/trpc';
 import { useState, useEffect, useCallback } from 'react';
 import { Plus, Search, Edit2, Trash2, Users } from 'lucide-react';
-import type { Child, CreateChildInput, FilterChildrenInput, Group } from '../../../server/src/schema';
+import type { Child, CreateChildInput, FilterChildrenInput, Group, Discipline } from '../../../server/src/schema';
 import { ChildForm } from '@/components/ChildForm';
 import { GroupAssignment } from '@/components/GroupAssignment';
+import { DisciplineAssignment } from '@/components/DisciplineAssignment';
 
 export function ChildrenManagement() {
   const [children, setChildren] = useState<Child[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
+  const [disciplines, setDisciplines] = useState<Discipline[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [editingChild, setEditingChild] = useState<Child | null>(null);
   const [selectedChild, setSelectedChild] = useState<Child | null>(null);
   const [showGroupAssignment, setShowGroupAssignment] = useState(false);
+  const [showDisciplineAssignment, setShowDisciplineAssignment] = useState(false);
 
   // Filter state
   const [filters, setFilters] = useState<FilterChildrenInput>({
@@ -44,10 +47,20 @@ export function ChildrenManagement() {
     }
   }, []);
 
+  const loadDisciplines = useCallback(async () => {
+    try {
+      const result = await trpc.getDisciplines.query();
+      setDisciplines(result);
+    } catch (error) {
+      console.error('Failed to load disciplines:', error);
+    }
+  }, []);
+
   useEffect(() => {
     loadChildren();
     loadGroups();
-  }, [loadChildren, loadGroups]);
+    loadDisciplines();
+  }, [loadChildren, loadGroups, loadDisciplines]);
 
   const handleCreateChild = async (data: CreateChildInput) => {
     setIsLoading(true);
@@ -199,6 +212,22 @@ export function ChildrenManagement() {
         />
       )}
 
+      {/* Discipline Assignment Modal */}
+      {showDisciplineAssignment && selectedChild && (
+        <DisciplineAssignment
+          child={selectedChild}
+          disciplines={disciplines}
+          onClose={() => {
+            setShowDisciplineAssignment(false);
+            setSelectedChild(null);
+          }}
+          onSuccess={() => {
+            loadChildren();
+            loadDisciplines();
+          }}
+        />
+      )}
+
       {/* Children List */}
       <div className="grid gap-4">
         {children.length === 0 ? (
@@ -248,6 +277,18 @@ export function ChildrenManagement() {
                     >
                       <Users className="h-4 w-4 mr-1" />
                       Groups
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setSelectedChild(child);
+                        setShowDisciplineAssignment(true);
+                      }}
+                      className="border-orange-200 text-orange-600 hover:bg-orange-50"
+                    >
+                      🏆
+                      Olympics
                     </Button>
                     <Button
                       variant="outline"

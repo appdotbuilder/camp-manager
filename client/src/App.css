@@ -123,3 +123,75 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(156, 163, 175, 0.7);
 }
+
+/* Olympics themed elements */
+.olympic-gold {
+  background: linear-gradient(45deg, #ffd700, #ffed4e);
+  color: #92400e;
+}
+
+.olympic-silver {
+  background: linear-gradient(45deg, #c0c0c0, #e5e7eb);
+  color: #374151;
+}
+
+.olympic-bronze {
+  background: linear-gradient(45deg, #cd7f32, #f59e0b);
+  color: #78350f;
+}
+
+.medal-glow {
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+/* Olympic rings inspired gradient */
+.olympic-rings-bg {
+  background: linear-gradient(135deg, 
+    #0081c8 0%, 
+    #fcb131 20%, 
+    #00a651 40%, 
+    #ee334e 60%, 
+    #000000 80%);
+  background-size: 500% 500%;
+  animation: gradientShift 10s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Ranking number styling */
+.ranking-number {
+  @apply text-2xl font-bold w-12 h-12 rounded-full flex items-center justify-center;
+}
+
+.ranking-1 {
+  @apply olympic-gold medal-glow;
+}
+
+.ranking-2 {
+  @apply olympic-silver;
+}
+
+.ranking-3 {
+  @apply olympic-bronze;
+}
+
+/* Trophy and medal animations */
+.trophy-bounce {
+  animation: trophyBounce 2s infinite;
+}
+
+@keyframes trophyBounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-5px);
+  }
+  60% {
+    transform: translateY(-3px);
+  }
+}
